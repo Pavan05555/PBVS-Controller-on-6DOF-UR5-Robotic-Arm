@@ -93,12 +93,12 @@ MAX_WRIST_TILT    = 0.5    # rad/s cap for tilt
 
 # Arm approach: speed toward target during Phase 1.
 # Raised limits — 0.05 m/s was too slow; MoveIt Servo needs a noticeable command.
-KP_APPROACH       = 2.5    # m/s per m of 3D position error
-MAX_APPROACH      = 0.35   # m/s cap (per axis in tool0 frame)
+KP_APPROACH       = 2.0    # m/s per m of 3D position error
+MAX_APPROACH      = 0.3   # m/s cap (per axis in tool0 frame)
 
 # Phase 2 gains
-KP_LINEAR         = 3.0
-KP_ANGULAR        = 3.5   # raised from 1.5 — orientation was not converging
+KP_LINEAR         = 2.5
+KP_ANGULAR        = 3.0   # raised from 1.5 — orientation was not converging
 MAX_LINEAR        = 0.30   # raised from 0.05 — arm was barely moving
 MAX_ANGULAR       = 1.2    # raised from 0.4 — allow faster wrist rotation
 
@@ -542,7 +542,7 @@ class PBVSController(Node):
             # Scale down approach speed when object is off-centre (prioritise centering first).
             centre_err = math.sqrt(ang_err_pan**2 + ang_err_tilt**2)
             # Reduce approach to 20% when very off-centre (>30°), full speed when centred
-            approach_scale = max(0.8, 1.0 - 0.5 * centre_err)
+            approach_scale = max(0.5, 1.0 - 1.5 * centre_err)
             vx_base = self._clamp(KP_APPROACH * ex * approach_scale, MAX_APPROACH)
             vy_base = self._clamp(KP_APPROACH * ey * approach_scale, MAX_APPROACH)
             vz_base = self._clamp(KP_APPROACH * ez * approach_scale, MAX_APPROACH)
